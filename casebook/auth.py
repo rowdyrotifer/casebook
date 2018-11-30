@@ -96,8 +96,18 @@ def makeuser():
     conn = get_full_db_connection()
     cursor = conn.cursor()
     cursor.execute('SELECT 1 FROM users WHERE username = %s', (username,))
-    if cursor.rowcount != 0:
+    if len(cursor.fetchall()) > 0:
         return jsonify({'result': 'exists'})
     else:
         generate_user(conn, username, password)
         return jsonify({'result': 'success'})
+
+
+@bp.route('/deleteuser', methods=['POST'])
+@login_required
+def deleteuser():
+    conn = get_full_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('DELETE FROM users WHERE id = %s', (g.user_id,))
+    conn.commit()
+    return '', 200

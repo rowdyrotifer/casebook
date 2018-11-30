@@ -57,7 +57,7 @@ def do_init():
                   `token` VARCHAR(32) PRIMARY KEY NOT NULL,
                   `user_id` INT NOT NULL,
                   `expiration_time` DATETIME NOT NULL,
-                  FOREIGN KEY (user_id) REFERENCES users(id)
+                  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
                 );"""
     cursor.execute(mk_session)
 
@@ -68,7 +68,7 @@ def do_init():
                   `posted_time` TIMESTAMP NOT NULL,
                   `title` TEXT NOT NULL,
                   `body` MEDIUMTEXT NOT NULL,
-                  FOREIGN KEY (author_id) REFERENCES users(id)
+                  FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE
                 );"""
     cursor.execute(mk_post)
 
@@ -77,8 +77,8 @@ def do_init():
                       `following_id` INT NOT NULL,
                       `follower_id` INT NOT NULL,
                       PRIMARY KEY (following_id, follower_id),
-                      FOREIGN KEY (following_id) REFERENCES users(id),
-                      FOREIGN KEY (follower_id) REFERENCES users(id)
+                      FOREIGN KEY (following_id) REFERENCES users(id) ON DELETE CASCADE,
+                      FOREIGN KEY (follower_id) REFERENCES users(id) ON DELETE CASCADE
                     );"""
     cursor.execute(mk_follow)
 
