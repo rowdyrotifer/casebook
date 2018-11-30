@@ -47,14 +47,14 @@ def do_init():
     # password is bcrypt format
     mk_users = """CREATE TABLE IF NOT EXISTS `users` (
               `id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-              `username` VARCHAR(64) NOT NULL,
+              `username` VARCHAR(64) UNIQUE NOT NULL,
               `password` BINARY (60) NOT NULL
             );"""
     cursor.execute(mk_users)
 
     print("Creating `session` table...")
     mk_session = """CREATE TABLE IF NOT EXISTS `session` (
-                  `token` VARCHAR(128) PRIMARY KEY NOT NULL,
+                  `token` VARCHAR(32) PRIMARY KEY NOT NULL,
                   `user_id` INT NOT NULL,
                   `expiration_time` DATETIME NOT NULL,
                   FOREIGN KEY (user_id) REFERENCES users(id)
@@ -111,6 +111,7 @@ def do_fill():
     conn = get_db_connection()
     conn.database = database_config['MySQL']['database']
     do_fill_users(conn)
+    do_fill_post(conn)
 
 
 if __name__ == '__main__':
