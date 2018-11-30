@@ -2,7 +2,7 @@ import os
 
 from flask import Flask
 
-from . import auth, posts
+from . import auth, posts, users
 
 
 def create_app():
@@ -18,5 +18,6 @@ def create_app():
 
     app.register_blueprint(auth.bp)
     app.register_blueprint(posts.bp)
+    app.register_blueprint(users.bp)
 
     return app

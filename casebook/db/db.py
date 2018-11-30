@@ -74,8 +74,9 @@ def do_init():
 
     print("Creating `follow` table...")
     mk_follow = """CREATE TABLE IF NOT EXISTS `follow` (
-                      `following_id` INT PRIMARY KEY NOT NULL,
+                      `following_id` INT NOT NULL,
                       `follower_id` INT NOT NULL,
+                      PRIMARY KEY (following_id, follower_id),
                       FOREIGN KEY (following_id) REFERENCES users(id),
                       FOREIGN KEY (follower_id) REFERENCES users(id)
                     );"""
@@ -107,11 +108,26 @@ def do_fill_post(conn):
     conn.commit()
 
 
+def do_fill_follow(conn):
+    cursor = conn.cursor()
+    pairs = [
+        (1,3),
+        (2,3),
+        (4,3),
+        (2,4),
+        (4,2),
+        (3,4)
+    ]
+    cursor.executemany("insert into follow (following_id, follower_id) values (%s, %s)", pairs)
+    conn.commit()
+
+
 def do_fill():
     conn = get_db_connection()
     conn.database = database_config['MySQL']['database']
     do_fill_users(conn)
     do_fill_post(conn)
+    do_fill_follow(conn)
 
 
 if __name__ == '__main__':
