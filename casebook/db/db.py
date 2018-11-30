@@ -111,6 +111,7 @@ def do_fill():
     conn = get_db_connection()
     conn.database = database_config['MySQL']['database']
     do_fill_users(conn)
+    do_fill_post(conn)
 
 
 if __name__ == '__main__':

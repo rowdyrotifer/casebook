@@ -2,7 +2,7 @@ import os
 
 from flask import Flask
 
-from . import auth
+from . import auth, posts
 
 
 def create_app():
@@ -17,5 +17,6 @@ def create_app():
         return "Casebook backend operational."
 
     app.register_blueprint(auth.bp)
+    app.register_blueprint(posts.bp)
 
     return app
