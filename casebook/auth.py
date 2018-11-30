@@ -29,14 +29,14 @@ def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if 'token' not in request.cookies:
-            return redirect('/login')
+            return redirect('/api/login')
         else:
             token = request.cookies['token']
             validated_user_id = validate_token(token)
             if validated_user_id is not None:
                 g.user_id = validated_user_id
             else:
-                redirect('/login')
+                redirect('/api/login')
             return view(**kwargs)
 
     return wrapped_view
