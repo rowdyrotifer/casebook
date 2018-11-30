@@ -35,10 +35,10 @@ def login_required(view):
     def wrapped_view(**kwargs):
         error_response = make_response()
         error_response.status_code = 401
-        if 'token' not in request.cookies:
+        if 'Authorization' not in request.headers:
             return error_response
         else:
-            token = request.cookies['token']
+            token = request.headers['Authorization']
             validated_user_id = validate_token(token)
             if validated_user_id is not None:
                 g.user_id = validated_user_id
