@@ -89,6 +89,7 @@ def generate_user(conn, username, password):
     cursor.execute("INSERT INTO users(username, password) VALUES (%s, %s)", (username, password_bcrypt))
     conn.commit()
 
+
 @bp.route('/makeuser', methods=['POST'])
 def makeuser():
     username = request.form['username']
@@ -109,5 +110,15 @@ def deleteuser():
     conn = get_full_db_connection()
     cursor = conn.cursor()
     cursor.execute('DELETE FROM users WHERE id = %s', (g.user_id,))
+    conn.commit()
+    return '', 200
+
+
+@bp.route('/logout', methods=['POST'])
+@login_required
+def logout():
+    conn = get_full_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('DELETE FROM `session` WHERE user_id = %s', (g.user_id,))
     conn.commit()
     return '', 200
