@@ -105,8 +105,8 @@ def do_fill_post(conn):
         (1, 1, '2018-11-29 21:53:42', 'My mother just died.', 'Please don\'t ask me how.'),
         (2, 1, '2018-11-29 22:53:42', 'Hello there world.', 'It\'s a whole new day.'),
         (3, 2, '2018-11-24 10:51:42', 'My name is Brian1.', 'My name is Brian1 and I am a student at BrianU.'),
-        (3, 2, '2018-11-24 10:51:42', 'My name is Brian2.', 'My name is Brian2 and I am a student at BrianU.'),
-        (3, 2, '2018-11-24 10:51:42', 'My name is Brian3.', 'My name is Brian3 and I am a student at BrianU.')
+        (4, 2, '2018-11-24 10:51:42', 'My name is Brian2.', 'My name is Brian2 and I am a student at BrianU.'),
+        (5, 2, '2018-11-24 10:51:42', 'My name is Brian3.', 'My name is Brian3 and I am a student at BrianU.')
     ]
     cursor.executemany("INSERT INTO post(id, author_id, posted_time, title, body) VALUES (%s, %s, %s, %s, %s)", buffer)
     conn.commit()
