@@ -65,27 +65,39 @@ def generate_session(conn, user_id):
 
 @bp.route('/login', methods=['POST'])
 def login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        conn = get_full_db_connection()
-        cursor = conn.cursor()
-        cursor.execute('SELECT * FROM users WHERE username = %s', (username,))
-        user = cursor.fetchone()
+    username = request.form['username']
+    password = request.form['password']
+    conn = get_full_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM users WHERE username = %s', (username,))
+    user = cursor.fetchone()
 
-        if user is not None and check_password_hash(user[2], password):
-            token = generate_session(conn, user[0])
-            resp = make_response(jsonify({'result': 'success', 'token': token}))
-            resp.set_cookie('token', token)
-            return resp
-        else:
-            return jsonify({'result': 'failure'})
+    if user is not None and check_password_hash(user[2], password):
+        token = generate_session(conn, user[0])
+        resp = make_response(jsonify({'result': 'success', 'token': token}))
+        resp.set_cookie('token', token)
+        return resp
+    else:
+        return jsonify({'result': 'failure'})
 
-        if error is None:
-            session.clear()
-            session['user_id'] = user[0]
-            return jsonify({'result': 'success'})
+    return jsonify({'result': 'success'})
 
-        flash(error)
+def generate_user(conn, username, password):
+    salt = bcrypt.gensalt()
+    password_bcrypt = bcrypt.hashpw(password.encode('utf8'), salt)
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO users(username, password) VALUES (%s, %s)", (username, password_bcrypt))
+    conn.commit()
 
-    return 405
+@bp.route('/makeuser', methods=['POST'])
+def makeuser():
+    username = request.form['username']
+    password = request.form['password']
+    conn = get_full_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT 1 FROM users WHERE username = %s', (username,))
+    if cursor.rowcount != 0:
+        return jsonify({'result': 'exists'})
+    else:
+        generate_user(conn, username, password)
+        return jsonify({'result': 'success'})
