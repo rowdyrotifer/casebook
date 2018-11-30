@@ -70,7 +70,7 @@ def update_post():
         timestamp = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime()) 
         conn = get_full_db_connection()
         cursor = conn.cursor()
-        cursor.execute("UPDATE post SET post.posted_time = %s, post.title = %s, post.body = %s WHERE post.id = %s AND post.author_id = %s", (timestamp, request.form['title'], request.form['body'], request.form['id'], 1))
+        cursor.execute("UPDATE post SET post.posted_time = %s, post.title = %s, post.body = %s WHERE post.id = %s AND post.author_id = %s", (timestamp, request.form['title'], request.form['body'], request.form['id'], g.user_id))
         conn.commit()
     except:
         return ('', 401)
