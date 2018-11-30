@@ -4,7 +4,7 @@ setup(
     name='casebook',
     version='0.1',
     license='MIT',
-    install_requires=['mysql-connector', 'Flask'],
+    install_requires=['mysql-connector', 'Flask', 'bcrypt'],
     description='Casebook: a simple Facebook-like exercise for a database class final project.',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
