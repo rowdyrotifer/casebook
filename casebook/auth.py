@@ -8,36 +8,43 @@ import functools
 from flask import (
     Blueprint, g,
     redirect, url_for, request, session, jsonify, flash, make_response)
+from gunicorn import app
 
 from casebook.db.db import get_full_db_connection
 
 bp = Blueprint('auth', __name__, url_prefix='/api')
 
 
-def validate_token(conn, token):
-    result = conn.execute('SELECT * FROM session WHERE token = %(token_value)', {'token_value': token}).fetchone()
+def validate_token(token):
+    conn = get_full_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM session WHERE token = %s', (token,))
+    result = cursor.fetchone()
     if result is None:
         return None
     token, user_id, expiration_time = result
-    if expiration_time < datetime.now():
+    if expiration_time >= datetime.now():
         return user_id
     else:
         return None
 
 
 def login_required(view):
+
     @functools.wraps(view)
     def wrapped_view(**kwargs):
+        error_response = make_response()
+        error_response.status_code = 401
         if 'token' not in request.cookies:
-            return redirect('/api/login')
+            return error_response
         else:
             token = request.cookies['token']
             validated_user_id = validate_token(token)
             if validated_user_id is not None:
                 g.user_id = validated_user_id
             else:
-                redirect('/api/login')
-            return view(**kwargs)
+                return error_response
+        return view(**kwargs)
 
     return wrapped_view
 
