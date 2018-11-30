@@ -69,7 +69,7 @@ def unfollow():
     try:
         conn = get_full_db_connection()
         cursor = conn.cursor()
-        cursor.execute("DELETE FROM follow WHERE follow.follower_id = %s AND follow.following_id = (SELECT users.id FROM users WHERE users.username = %s)", (1, unfollowed_username))
+        cursor.execute("DELETE FROM follow WHERE follow.follower_id = %s AND follow.following_id = (SELECT users.id FROM users WHERE users.username = %s)", (g.user_id, unfollowed_username))
         conn.commit()
     except Exception as e:
         print(e)
