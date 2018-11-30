@@ -9,6 +9,12 @@ database_config = configparser.ConfigParser('')
 database_config.read(os.path.join(os.path.dirname(__file__), 'database.ini'))
 
 
+def get_full_db_connection():
+    conn = get_db_connection()
+    conn.database = database_config['MySQL']['database']
+    return conn
+
+
 def get_db_connection():
     return mysql.connector.connect(
         host=database_config['MySQL']['host'],
@@ -79,7 +85,7 @@ def do_init():
 def do_fill_users(conn):
     cursor = conn.cursor()
     users = [
-        (1, 'mark', 'mark', b'$2b$12$II5aKVfQ0lqNEXhoB4I84u'),
+        (1, 'mark',  'mark',  b'$2b$12$II5aKVfQ0lqNEXhoB4I84u'),
         (2, 'brian', 'brian', b'$2b$12$vn3oQ/ap/4snuzcSqAuf1O'),
         (3, 'david', 'david', b'$2b$12$vpikI1Gsn.bisYBsT7zfH.'),
         (4, 'jason', 'jason', b'$2b$12$futEJBBDdf50MNKugTATYe')
@@ -99,6 +105,7 @@ def do_fill_post(conn):
     ]
     cursor.executemany("INSERT INTO post(id, author_id, posted_time, title, body) VALUES (%s, %s, %s, %s, %s)", buffer)
     conn.commit()
+
 
 def do_fill():
     conn = get_db_connection()
