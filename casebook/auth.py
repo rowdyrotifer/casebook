@@ -66,8 +66,8 @@ def generate_session(conn, user_id):
 @bp.route('/login', methods=['POST'])
 def login():
     if request.method == 'POST':
-        username = request.args['username']
-        password = request.args['password']
+        username = request.form['username']
+        password = request.form['password']
         conn = get_full_db_connection()
         cursor = conn.cursor()
         cursor.execute('SELECT * FROM users WHERE username = %s', (username,))
