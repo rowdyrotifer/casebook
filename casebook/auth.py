@@ -26,7 +26,7 @@ def validate_token(conn, token):
 
 
 def login_required(view):
-    @functools.wrap(view)
+    @functools.wraps(view)
     def wrapped_view(**kwargs):
         if 'token' not in request.cookies:
             return redirect('/login')
