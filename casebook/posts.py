@@ -10,8 +10,7 @@ from casebook.objects.postobject import PostObject
 
 bp = Blueprint('posts', __name__, url_prefix='/api')
 
-@bp.route('/posts')
-@login_required
+@bp.route('/posts') @login_required
 def posts():
     try:
         username = request.args.get("username")
